@@ -1,0 +1,70 @@
+{
+  "name": "vue3-xm",
+  "version": "0.1.0",
+  "description": "Modern Vue 3 Component Library",
+  "type": "module",
+  "main": "./dist/index.umd.js",
+  "module": "./dist/index.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./style.css": "./dist/style.css"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "keywords": [
+    "vue",
+    "vue3",
+    "components",
+    "ui",
+    "typescript",
+    "drag-chart",
+    "swiper"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/xm-components.git"
+  },
+  "homepage": "https://your-username.github.io/xm-components",
+  "bugs": {
+    "url": "https://github.com/your-username/xm-components/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.9",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "rollup-plugin-visualizer": "^5.14.0",
+    "terser": "^5.43.1",
+    "typescript": "^5.0.0",
+    "vite": "^5.0.0",
+    "vite-plugin-dts": "^3.9.1",
+    "vue": "^3.3.0",
+    "vue-tsc": "^3.0.5"
+  },
+  "peerDependencies": {
+    "vue": "^3.3.0"
+  },
+  "scripts": {
+    "dev": "vite serve",
+    "build": "vite build",
+    "build:types": "vue-tsc --declaration --emitDeclarationOnly --outDir dist",
+    "preview": "vite preview",
+    "prepublishOnly": "npm run build",
+    "release": "npm run build && npm publish"
+  },
+  "dependencies": {
+    "@vueuse/core": "^13.6.0",
+    "dayjs": "^1.11.13",
+    "echarts": "^6.0.0"
+  }
+}
