@@ -12,7 +12,7 @@
             <DragChart
                 :data="advancedData"
                 :width="900"
-                :height="450"
+                :height="200"
                 :theme="currentTheme"
                 :initial-start="initialRange.start"
                 :initial-end="initialRange.end"
@@ -191,6 +191,7 @@ const calculateDaysDiff = () => {
     padding: 24px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    height: 200px;
 }
 
 .info-panel {

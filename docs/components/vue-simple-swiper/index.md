@@ -23,9 +23,86 @@ import Demo2 from './demo2.vue'
 
 <Demo1 />
 
+::: details 查看代码
+
+```vue
+<template>
+  <SwiperSimple
+    :img-list="basicImages"
+    :auto-play="false"
+    :keys-control="true"
+  />
+</template>
+
+<script setup>
+import { ref } from "vue";
+import { SwiperSimple } from "vue3-xm";
+
+const basicImages = ref([
+  "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=400&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=600&fit=crop",
+]);
+</script>
+```
+
+:::
+
 ### 高级配置演示
 
 <Demo2 />
+
+::: details 查看代码
+
+```vue
+<template>
+  <div>
+    <div class="controls">
+      <button @click="toggleAutoPlay">
+        {{ isAutoPlay ? "暂停自动播放" : "开始自动播放" }}
+      </button>
+      <select v-model="playSpeed">
+        <option value="1">1秒</option>
+        <option value="2">2秒</option>
+        <option value="3">3秒</option>
+      </select>
+    </div>
+
+    <SwiperSimple
+      :img-list="advancedImages"
+      :auto-play="isAutoPlay"
+      :play-time="playSpeed"
+      :infinite="isInfinite"
+    >
+      <template #leftBtn>
+        <button class="custom-btn">⬅️ 上一张</button>
+      </template>
+      <template #rightBtn>
+        <button class="custom-btn">下一张 ➡️</button>
+      </template>
+    </SwiperSimple>
+  </div>
+</template>
+
+<script setup>
+import { ref } from "vue";
+import { SwiperSimple } from "vue3-xm";
+
+const isAutoPlay = ref(true);
+const isInfinite = ref(true);
+const playSpeed = ref(3);
+
+const advancedImages = ref([
+  // ... 图片数组
+]);
+
+const toggleAutoPlay = () => {
+  isAutoPlay.value = !isAutoPlay.value;
+};
+</script>
+```
+
+:::
 
 ## 安装
 
