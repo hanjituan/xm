@@ -12,6 +12,21 @@
 - 🎨 **自定义按钮** - 支持自定义左右导航按钮
 - 📦 **TypeScript** - 完整的类型支持
 
+## 在线演示
+
+### 基础演示
+
+<script setup>
+import Demo1 from './demo1.vue'
+import Demo2 from './demo2.vue'
+</script>
+
+<Demo1 />
+
+### 高级配置演示
+
+<Demo2 />
+
 ## 安装
 
 ```bash
