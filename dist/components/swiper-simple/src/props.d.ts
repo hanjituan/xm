@@ -1,6 +1,15 @@
+import { PropType } from 'vue';
+
+export interface SwiperProps {
+    imgList: string[];
+    autoPlay: boolean;
+    playTime: number | string;
+    keysControl: boolean;
+    infinite: boolean;
+}
 declare const _default: {
     imgList: {
-        type: ArrayConstructor;
+        type: PropType<string[]>;
         default: () => never[];
         required: boolean;
     };
@@ -9,7 +18,7 @@ declare const _default: {
         default: () => boolean;
     };
     playTime: {
-        type: (StringConstructor | NumberConstructor)[];
+        type: PropType<number | string>;
         default: () => number;
     };
     keysControl: {
