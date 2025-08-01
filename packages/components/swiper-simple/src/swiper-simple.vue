@@ -1,145 +1,201 @@
 <template>
     <div class="swiper-wrapper">
-        <div class="swiper-container" ref="con">
+        <div class="swiper-container" ref="swiperContainerRef">
             <div class="swiper-item" v-for="(img, index) in imgs" :key="index">
                 <img :src="img" alt="" />
             </div>
         </div>
-        <div class="pagenation">
+        <div class="pagenation" ref="paginationRef">
             <div v-for="(img, index) in imgs" class="page-item" :key="index">
                 <img :src="img" :class="{ active: scrollIndex == index }" @click="jumpByIndex(index)" alt="" />
             </div>
         </div>
         <div class="btn">
             <slot name="leftBtn">
-                <button class="btn-left" @click="prevPage">←</button>
+                <button class="btn-left" @click="() => prevPage()">←</button>
             </slot>
             <slot name="rightBtn">
-                <button class="btn-right" @click="nextPage">→</button>
+                <button class="btn-right" @click="() => nextPage()">→</button>
             </slot>
         </div>
     </div>
 </template>
 
-<script>
-import props from "./props";
-export default {
-    name: "swiper-simple",
-    data() {
-        return {
-            offset: 0,
-            swiperContainer: null,
-            scrollIndex: 0,
-            timer: null,
-            imgs: [],
-        };
-    },
-    props: {
-        ...props,
-    },
+<script setup lang="ts" name="SwiperSimple">
+import { ref, onMounted, onBeforeUnmount, nextTick, watch } from "vue";
+import props, { type SwiperProps } from "./props";
 
-    mounted() {
-        this.$nextTick(() => {
-            this.imgs = [...this.imgList];
-            this.swiperContainer = document.querySelector(".swiper-container");
-            if (this.keysControl) {
-                window.addEventListener("keydown", this.keydown);
-            }
-            if (this.autoPlay) {
-                this.play();
-            } else {
-                this.stop();
-            }
-        });
-    },
-    destroyed() {
-        window.removeEventListener("keydown", this.keydown);
-    },
-    methods: {
-        start() {},
-        pauze() {},
+// Props
+const propsData = defineProps<SwiperProps>();
 
-        play() {
-            this.timer = setInterval(() => {
-                this.nextPage(true);
-            }, this.playTime * 1000);
-        },
+// Reactive data
+const offset = ref(0);
+const swiperContainerRef = ref<HTMLElement | null>(null);
+const paginationRef = ref<HTMLElement | null>(null);
+const scrollIndex = ref(0);
+const timer = ref<NodeJS.Timeout | null>(null);
+const imgs = ref<string[]>([]);
 
-        stop() {
-            if (this.timer) {
-                this.clearInterval(this.timer);
-            }
-        },
-
-        keydown(e) {
-            if (!this.swiperContainer) {
-                console.warn("please keep sure that dom is loaded");
-                return;
-            }
-            // right arrow
-            if (e.keyCode === 39) {
-                this.nextPage();
-            }
-            // left arrow
-            if (e.keyCode === 37) {
-                this.prevPage();
-            }
-        },
-
-        nextPage() {
-            this.scrollIndex++;
-            if (this.scrollIndex > this.imgs.length - 1) {
-                if (this.infinite) {
-                    this.imgs = this.imgs.concat(this.imgs);
-                    this.$nextTick(() => {
-                        this.nextFn();
-                    });
-                    // setTimeout(() => {
-                    //   this.imgs = this.imgs.splice(0, this.imgList.length);
-                    // }, 100);
-                } else {
-                    this.scrollIndex = this.imgs.length - 1;
-                }
-                return;
-            }
-            this.nextFn();
-        },
-
-        nextFn() {
-            this.offset = -400 * this.scrollIndex;
-            this.swiperContainer.style.transform = `translateX(${this.offset}px)`;
-            this.scrollIntoViews();
-        },
-
-        prevPage() {
-            this.scrollIndex--;
-            if (this.scrollIndex < 0) {
-                this.scrollIndex = 0;
-                return;
-            }
-            this.offset = -400 * this.scrollIndex;
-            this.swiperContainer.style.transform = `translateX(${this.offset}px)`;
-            this.scrollIntoViews();
-        },
-
-        jumpByIndex(index) {
-            this.scrollIndex = index + 1;
-            this.prevPage();
-            this.scrollIntoViews();
-        },
-
-        scrollIntoViews() {
-            const pages = document.querySelector(".pagenation");
-            const currentPageEl = [...pages.childNodes][this.scrollIndex];
-            if (!currentPageEl) {
-                return;
-            }
-            currentPageEl.scrollIntoView({
-                behavior: "smooth",
-            });
-        },
-    },
+// Methods
+const play = () => {
+    timer.value = setInterval(() => {
+        nextPage(true); // 传递 true 表示这是自动播放
+    }, Number(propsData.playTime) * 1000);
 };
+
+const stop = () => {
+    if (timer.value) {
+        clearInterval(timer.value);
+        timer.value = null;
+    }
+};
+
+const keydown = (e: KeyboardEvent) => {
+    if (!swiperContainerRef.value) {
+        console.warn("please keep sure that dom is loaded");
+        return;
+    }
+    // right arrow
+    if (e.keyCode === 39) {
+        nextPage(); // 键盘操作不是自动播放
+    }
+    // left arrow
+    if (e.keyCode === 37) {
+        prevPage();
+    }
+};
+
+const nextPage = (isAutoPlay = false) => {
+    scrollIndex.value++;
+    if (scrollIndex.value > imgs.value.length - 1) {
+        if (propsData.infinite) {
+            imgs.value = imgs.value.concat(imgs.value);
+            nextTick(() => {
+                nextFn(isAutoPlay);
+            });
+        } else {
+            scrollIndex.value = imgs.value.length - 1;
+        }
+        return;
+    }
+    nextFn(isAutoPlay);
+};
+
+const nextFn = (isAutoPlay = false) => {
+    offset.value = -400 * scrollIndex.value;
+    if (swiperContainerRef.value) {
+        swiperContainerRef.value.style.transform = `translateX(${offset.value}px)`;
+    }
+    // 只有在非自动播放时才滚动分页器
+    if (!isAutoPlay) {
+        scrollIntoViews();
+    }
+};
+
+const prevPage = () => {
+    scrollIndex.value--;
+    if (scrollIndex.value < 0) {
+        scrollIndex.value = 0;
+        return;
+    }
+    offset.value = -400 * scrollIndex.value;
+    if (swiperContainerRef.value) {
+        swiperContainerRef.value.style.transform = `translateX(${offset.value}px)`;
+    }
+    scrollIntoViews();
+};
+
+const jumpByIndex = (index: number) => {
+    scrollIndex.value = index;
+    offset.value = -400 * scrollIndex.value;
+    if (swiperContainerRef.value) {
+        swiperContainerRef.value.style.transform = `translateX(${offset.value}px)`;
+    }
+    scrollIntoViews();
+};
+
+const scrollIntoViews = () => {
+    if (!paginationRef.value) return;
+
+    const currentPageEl = paginationRef.value.children[scrollIndex.value] as HTMLElement;
+    if (!currentPageEl) {
+        return;
+    }
+
+    // 不使用 scrollIntoView，而是手动计算滚动位置
+    const container = paginationRef.value;
+    const elementLeft = currentPageEl.offsetLeft;
+    const elementWidth = currentPageEl.offsetWidth;
+    const containerWidth = container.offsetWidth;
+    const containerScrollLeft = container.scrollLeft;
+
+    // 计算是否需要滚动
+    const elementRight = elementLeft + elementWidth;
+    const containerRight = containerScrollLeft + containerWidth;
+
+    let newScrollLeft = containerScrollLeft;
+
+    // 如果元素在容器右侧不可见，向右滚动
+    if (elementRight > containerRight) {
+        newScrollLeft = elementLeft - containerWidth + elementWidth;
+    }
+    // 如果元素在容器左侧不可见，向左滚动
+    else if (elementLeft < containerScrollLeft) {
+        newScrollLeft = elementLeft;
+    }
+
+    // 平滑滚动到计算出的位置
+    container.scrollTo({
+        left: newScrollLeft,
+        behavior: "smooth",
+    });
+};
+
+// Lifecycle
+onMounted(() => {
+    nextTick(() => {
+        imgs.value = [...propsData.imgList];
+
+        if (propsData.keysControl) {
+            window.addEventListener("keydown", keydown);
+        }
+        if (propsData.autoPlay) {
+            play();
+        } else {
+            stop();
+        }
+    });
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener("keydown", keydown);
+    stop();
+});
+
+// Watch for prop changes
+watch(
+    () => propsData.imgList,
+    (newValue) => {
+        imgs.value = [...newValue];
+        scrollIndex.value = 0;
+        offset.value = 0;
+        if (swiperContainerRef.value) {
+            swiperContainerRef.value.style.transform = `translateX(0px)`;
+        }
+    },
+    { deep: true }
+);
+
+watch(
+    () => propsData.autoPlay,
+    (newValue) => {
+        if (newValue) {
+            play();
+        } else {
+            stop();
+        }
+    }
+);
 </script>
 
 <style scoped>

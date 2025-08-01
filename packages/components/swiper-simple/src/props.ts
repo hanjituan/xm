@@ -1,6 +1,16 @@
+import { PropType } from "vue";
+
+export interface SwiperProps {
+    imgList: string[];
+    autoPlay: boolean;
+    playTime: number | string;
+    keysControl: boolean;
+    infinite: boolean;
+}
+
 export default {
     imgList: {
-        type: Array,
+        type: Array as PropType<string[]>,
         default: () => [],
         required: true,
     },
@@ -10,7 +20,7 @@ export default {
     },
     // 当 autoPlay 为 true 时, 生效
     playTime: {
-        type: [String, Number],
+        type: [String, Number] as PropType<number | string>,
         default: () => 2,
     },
     keysControl: {
