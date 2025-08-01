@@ -1,0 +1,54 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# 4 space indentation for most files
+[*]
+indent_style = space
+indent_size = 4
+
+# 2 space indentation for specific file types
+[*.{json,yml,yaml,md}]
+indent_size = 2
+
+# Tab indentation for Makefiles
+[Makefile]
+indent_style = tab
+
+# Specific settings for JavaScript/TypeScript files
+[*.{js,jsx,ts,tsx,vue}]
+indent_style = space
+indent_size = 4
+max_line_length = 120
+
+# Specific settings for CSS/SCSS files
+[*.{css,scss,less}]
+indent_style = space
+indent_size = 2
+
+# Specific settings for HTML files
+[*.{html,htm}]
+indent_style = space
+indent_size = 2
+
+# Specific settings for XML files
+[*.{xml,svg}]
+indent_style = space
+indent_size = 2
+
+# Package.json files
+[package.json]
+indent_style = space
+indent_size = 2
+
+# Lock files should not be edited
+[{package-lock.json,pnpm-lock.yaml,yarn.lock}]
+insert_final_newline = false
