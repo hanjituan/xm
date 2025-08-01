@@ -14,11 +14,11 @@ Modern Vue 3 Component Library
 ## Installation
 
 ```bash
-npm install @xm/components
+npm install vue3-xm
 # or
-yarn add @xm/components
+yarn add vue3-xm
 # or
-pnpm add @xm/components
+pnpm add vue3-xm
 ```
 
 ## Usage

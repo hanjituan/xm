@@ -31,11 +31,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: pnpm # 或 npm / yarn
+          cache: pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Install dependencies
-        run: pnpm install # 或 npm ci / yarn --frozen-lockfile
+        run: pnpm install
       - name: Build with VitePress
         run: pnpm --filter docs build
       - name: Upload artifact
