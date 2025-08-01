@@ -6,8 +6,13 @@ export default defineConfig({
     description: "Modern Vue 3 Component Library",
     base: "/xm/", // GitHub Pages 部署路径
     head: [
-        ["link", { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" }],
-        ["link", { rel: "alternate icon", href: "/favicon.svg" }],
+        [
+            "link",
+            { rel: "icon", href: "/xm/favicon.svg", type: "image/svg+xml" },
+        ],
+        ["link", { rel: "icon", href: "/xm/favicon.ico", sizes: "any" }],
+        ["link", { rel: "apple-touch-icon", href: "/xm/favicon.svg" }],
+        ["meta", { name: "theme-color", content: "#FFD700" }],
     ],
     themeConfig: {
         // https://vitepress.dev/reference/default-theme-config
