@@ -56,6 +56,7 @@
   },
   "scripts": {
     "dev": "vite serve",
+    "dev:packages": "pnpm --filter packages dev",
     "build": "vite build",
     "build:types": "vue-tsc --declaration --emitDeclarationOnly --outDir dist",
     "preview": "vite preview",
