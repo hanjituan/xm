@@ -41,10 +41,10 @@ export default defineConfig({
                     text: "Components",
                     items: [
                         { text: "Overview", link: "/components/" },
-                        { text: "Drag Chart", link: "/components/drag-chart" },
+                        { text: "Drag Chart", link: "/components/drag-chart/" },
                         {
                             text: "Vue Simple Swiper",
-                            link: "/components/vue-simple-swiper",
+                            link: "/components/vue-simple-swiper/",
                         },
                     ],
                 },

@@ -28,11 +28,11 @@ You can import components individually for better tree-shaking:
 
 ```typescript
 // Import specific components
-import { DragChart } from '@xm/components'
+import { DragChart } from "@xm/components";
 
 // Or import all components
-import XMComponents from '@xm/components'
-import '@xm/components/style.css'
+import XMComponents from "@xm/components";
+import "@xm/components/style.css";
 ```
 
 ### 2. Register Components
@@ -41,20 +41,20 @@ import '@xm/components/style.css'
 
 ```typescript
 // main.ts
-import { createApp } from 'vue'
-import XMComponents from '@xm/components'
-import '@xm/components/style.css'
+import { createApp } from "vue";
+import XMComponents from "@xm/components";
+import "@xm/components/style.css";
 
-const app = createApp(App)
-app.use(XMComponents)
-app.mount('#app')
+const app = createApp(App);
+app.use(XMComponents);
+app.mount("#app");
 ```
 
 #### Local Registration
 
 ```vue
 <script setup>
-import { DragChart } from '@xm/components'
+import { DragChart } from "@xm/components";
 </script>
 
 <template>
@@ -79,24 +79,19 @@ Here's a quick example using the Drag Chart component:
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { DragChart } from '@xm/components'
-import dayjs from 'dayjs'
+import { ref } from "vue";
+import { DragChart } from "@xm/components";
+import dayjs from "dayjs";
 
-const timeRange = ref([
-  dayjs().subtract(7, 'day'),
-  dayjs()
-])
+const timeRange = ref([dayjs().subtract(7, "day"), dayjs()]);
 
-const activeTime = ref([0, 12])
+const activeTime = ref([0, 12]);
 
-const chartData = ref([
-  10, 20, 30, 25, 15, 35, 40, 30, 20, 25, 30, 35
-])
+const chartData = ref([10, 20, 30, 25, 15, 35, 40, 30, 20, 25, 30, 35]);
 
 function handleTimeUpdate(newTime) {
-  activeTime.value = newTime
-  console.log('Active time updated:', newTime)
+  activeTime.value = newTime;
+  console.log("Active time updated:", newTime);
 }
 </script>
 
@@ -113,18 +108,18 @@ function handleTimeUpdate(newTime) {
 XM Components is built with TypeScript and provides full type definitions:
 
 ```typescript
-import type { DragChartProps } from '@xm/components'
+import type { DragChartProps } from "@xm/components";
 
 interface MyComponentProps {
-  chartConfig: DragChartProps
+  chartConfig: DragChartProps;
 }
 ```
 
 ## Next Steps
 
 - 📖 [Browse Components](/components/) - Explore all available components
-- 🎯 [Drag Chart Guide](/components/drag-chart) - Learn about the drag chart component
-- 🚀 [Vue Simple Swiper](/components/vue-simple-swiper) - Coming soon!
+- 🎯 [Drag Chart Guide](/components/drag-chart/) - Learn about the drag chart component
+- 🚀 [Vue Simple Swiper](/components/vue-simple-swiper/) - Learn about the swiper component
 
 ## Need Help?
 
