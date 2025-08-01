@@ -60,7 +60,10 @@
     "build:types": "vue-tsc --declaration --emitDeclarationOnly --outDir dist",
     "preview": "vite preview",
     "prepublishOnly": "npm run build",
-    "release": "npm run build && npm publish"
+    "release": "npm run build && npm publish",
+    "docs:dev": "pnpm --filter docs dev",
+    "docs:build": "pnpm --filter docs build",
+    "docs:preview": "pnpm --filter docs preview"
   },
   "dependencies": {
     "@vueuse/core": "^13.6.0",
