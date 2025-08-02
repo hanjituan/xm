@@ -12,6 +12,12 @@
 - 🎨 **自定义按钮** - 支持自定义左右导航按钮
 - 📦 **TypeScript** - 完整的类型支持
 
+## 安装
+
+```bash
+npm install vue3-xm
+```
+
 ## 在线演示
 
 ### 基础演示
@@ -19,6 +25,7 @@
 <script setup>
 import Demo1 from './demo1.vue'
 import Demo2 from './demo2.vue'
+import Demo3 from './demo3.vue'
 </script>
 
 <Demo1 />
@@ -27,21 +34,120 @@ import Demo2 from './demo2.vue'
 
 ```vue
 <template>
-  <SwiperSimple
-    :img-list="basicImages"
-    :auto-play="false"
-    :keys-control="true"
-  />
+  <div class="demo-container">
+    <h3>基础轮播图</h3>
+    <p>这是一个基础的轮播图示例，展示默认配置和基本功能。</p>
+
+    <div class="swiper-wrapper">
+      <SwiperSimple
+        :img-list="basicImages"
+        :auto-play="false"
+        :keys-control="true"
+        :infinite="false"
+      />
+    </div>
+
+    <div class="info-panel">
+      <h4>功能说明</h4>
+      <ul>
+        <li>🖱️ 点击左右按钮切换图片</li>
+        <li>⌨️ 使用键盘左右箭头键控制</li>
+        <li>🖼️ 点击底部缩略图跳转</li>
+        <li>📱 支持触摸手势（移动端）</li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { SwiperSimple } from "vue3-xm";
 
+// 基础示例图片
 const basicImages = ref([
-  "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop",
-  "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=400&h=600&fit=crop",
-  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=600&fit=crop",
+  "https://picsum.photos/id/1/400/600",
+  "https://picsum.photos/id/10/400/600",
+  "https://picsum.photos/id/100/400/600",
+  "https://picsum.photos/id/1000/400/600",
+  "https://picsum.photos/id/1001/400/600",
+]);
+</script>
+```
+
+:::
+
+### 可配置显示选项演示
+
+<Demo3 />
+
+::: details 查看代码
+
+```vue
+<template>
+  <div class="demo-container">
+    <h3>可配置显示选项演示</h3>
+    <p>展示分页器和导航按钮的显示/隐藏配置。</p>
+
+    <div class="config-controls">
+      <label>
+        <input type="checkbox" v-model="showPagination" />
+        显示分页器
+      </label>
+      <label>
+        <input type="checkbox" v-model="showNavigation" />
+        显示导航按钮
+      </label>
+    </div>
+
+    <div class="swiper-wrapper">
+      <SwiperSimple
+        :img-list="configImages"
+        :auto-play="true"
+        :play-time="3"
+        :infinite="true"
+        :show-pagination="showPagination"
+        :show-navigation="showNavigation"
+        :keys-control="true"
+      />
+    </div>
+
+    <div class="info-panel">
+      <h4>当前配置</h4>
+      <ul>
+        <li>
+          分页器显示:
+          <span :class="showPagination ? 'enabled' : 'disabled'">{{
+            showPagination ? "开启" : "关闭"
+          }}</span>
+        </li>
+        <li>
+          导航按钮显示:
+          <span :class="showNavigation ? 'enabled' : 'disabled'">{{
+            showNavigation ? "开启" : "关闭"
+          }}</span>
+        </li>
+        <li>🎯 无论何种配置，键盘控制始终有效</li>
+        <li>🔄 自动播放和无限循环保持开启</li>
+      </ul>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from "vue";
+import { SwiperSimple } from "vue3-xm";
+
+// 配置状态
+const showPagination = ref(true);
+const showNavigation = ref(true);
+
+// 配置示例图片
+const configImages = ref([
+  "https://picsum.photos/id/1018/400/600",
+  "https://picsum.photos/id/1025/400/600",
+  "https://picsum.photos/id/1039/400/600",
+  "https://picsum.photos/id/1043/400/600",
+  "https://picsum.photos/id/1051/400/600",
 ]);
 </script>
 ```
@@ -56,116 +162,141 @@ const basicImages = ref([
 
 ```vue
 <template>
-  <div>
+  <div class="demo-container">
+    <h3>高级轮播图配置</h3>
+    <p>这个示例展示了自动播放、无限循环、自定义按钮等高级功能。</p>
+
     <div class="controls">
-      <button @click="toggleAutoPlay">
-        {{ isAutoPlay ? "暂停自动播放" : "开始自动播放" }}
+      <button
+        @click="toggleAutoPlay"
+        :class="['control-btn', { active: isAutoPlay }]"
+      >
+        {{ isAutoPlay ? "⏸️ 暂停自动播放" : "▶️ 开始自动播放" }}
       </button>
-      <select v-model="playSpeed">
-        <option value="1">1秒</option>
-        <option value="2">2秒</option>
-        <option value="3">3秒</option>
-      </select>
+      <button
+        @click="toggleInfinite"
+        :class="['control-btn', { active: isInfinite }]"
+      >
+        {{ isInfinite ? "🔄 关闭循环" : "🔄 开启循环" }}
+      </button>
+      <div class="speed-control">
+        <label>播放速度:</label>
+        <select v-model="playSpeed" @change="onSpeedChange">
+          <option value="1">1秒</option>
+          <option value="2">2秒</option>
+          <option value="3">3秒</option>
+          <option value="5">5秒</option>
+        </select>
+      </div>
     </div>
 
-    <SwiperSimple
-      :img-list="advancedImages"
-      :auto-play="isAutoPlay"
-      :play-time="playSpeed"
-      :infinite="isInfinite"
-    >
-      <template #leftBtn>
-        <button class="custom-btn">⬅️ 上一张</button>
-      </template>
-      <template #rightBtn>
-        <button class="custom-btn">下一张 ➡️</button>
-      </template>
-    </SwiperSimple>
+    <div class="swiper-wrapper">
+      <SwiperSimple
+        :img-list="advancedImages"
+        :auto-play="isAutoPlay"
+        :play-time="playSpeed"
+        :infinite="isInfinite"
+        :keys-control="true"
+        ref="swiperRef"
+      >
+        <template #leftBtn>
+          <button class="custom-btn custom-btn-left" @click="prevSlide">
+            ⬅️ 上一张
+          </button>
+        </template>
+        <template #rightBtn>
+          <button class="custom-btn custom-btn-right" @click="nextSlide">
+            下一张 ➡️
+          </button>
+        </template>
+      </SwiperSimple>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import { SwiperSimple } from "vue3-xm";
 
+// 高级示例图片 - 更多图片
+const advancedImages = ref([
+  "https://picsum.photos/seed/demo2-1/400/600",
+  "https://picsum.photos/seed/demo2-2/400/600",
+  "https://picsum.photos/seed/demo2-3/400/600",
+  "https://picsum.photos/seed/demo2-4/400/600",
+  "https://picsum.photos/seed/demo2-5/400/600",
+  "https://picsum.photos/seed/demo2-6/400/600",
+  "https://picsum.photos/seed/demo2-7/400/600",
+  "https://picsum.photos/seed/demo2-8/400/600",
+]);
+
+// 控制状态
 const isAutoPlay = ref(true);
 const isInfinite = ref(true);
 const playSpeed = ref(3);
+const swiperRef = ref(null);
 
-const advancedImages = ref([
-  // ... 图片数组
-]);
-
+// 切换自动播放
 const toggleAutoPlay = () => {
   isAutoPlay.value = !isAutoPlay.value;
+  nextTick(() => {
+    if (swiperRef.value) {
+      if (isAutoPlay.value) {
+        swiperRef.value.play?.();
+      } else {
+        swiperRef.value.stop?.();
+      }
+    }
+  });
+};
+
+// 切换无限循环
+const toggleInfinite = () => {
+  isInfinite.value = !isInfinite.value;
+};
+
+// 播放速度变化
+const onSpeedChange = () => {
+  if (isAutoPlay.value && swiperRef.value) {
+    swiperRef.value.stop?.();
+    setTimeout(() => {
+      swiperRef.value.play?.();
+    }, 100);
+  }
+};
+
+// 手动切换到下一张
+const nextSlide = () => {
+  if (swiperRef.value) {
+    swiperRef.value.nextPage?.();
+  }
+};
+
+// 手动切换到上一张
+const prevSlide = () => {
+  if (swiperRef.value) {
+    swiperRef.value.prevPage?.();
+  }
 };
 </script>
 ```
 
 :::
 
-## 安装
-
-```bash
-npm install vue3-xm
-```
-
-## 基础用法
-
-```vue
-<template>
-  <swiper-simple :img-list="images" :auto-play="true" :play-time="3" />
-</template>
-
-<script setup>
-import { SwiperSimple } from "vue3-xm";
-import "vue3-xm/style.css";
-
-const images = [
-  "https://example.com/image1.jpg",
-  "https://example.com/image2.jpg",
-  "https://example.com/image3.jpg",
-];
-</script>
-```
-
-## 自定义按钮
-
-```vue
-<template>
-  <swiper-simple :img-list="images">
-    <template #leftBtn>
-      <button class="custom-btn">⬅️</button>
-    </template>
-    <template #rightBtn>
-      <button class="custom-btn">➡️</button>
-    </template>
-  </swiper-simple>
-</template>
-
-<style>
-.custom-btn {
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 12px;
-  cursor: pointer;
-}
-</style>
-```
-
 ## API
 
 ### Props
 
-| 参数          | 类型               | 默认值  | 说明                           |
-| ------------- | ------------------ | ------- | ------------------------------ |
-| `imgList`     | `Array<string>`    | `[]`    | **必需** 图片地址数组          |
-| `autoPlay`    | `boolean`          | `false` | 是否开启自动播放               |
-| `playTime`    | `number \| string` | `2`     | 自动播放间隔时间（秒）         |
-| `keysControl` | `boolean`          | `true`  | 是否启用键盘控制（左右箭头键） |
-| `infinite`    | `boolean`          | `false` | 是否支持无限循环滚动           |
+| 参数             | 类型               | 默认值  | 说明                                         |
+| ---------------- | ------------------ | ------- | -------------------------------------------- |
+| `imgList`        | `Array<string>`    | `[]`    | **必需** 图片地址数组                        |
+| `autoPlay`       | `boolean`          | `false` | 是否开启自动播放                             |
+| `playTime`       | `number \| string` | `2`     | 自动播放间隔时间（秒）                       |
+| `keysControl`    | `boolean`          | `true`  | 是否启用键盘控制（左右箭头键）               |
+| `infinite`       | `boolean`          | `false` | 是否支持无限循环滚动                         |
+| `hoverPause`     | `boolean`          | `true`  | 鼠标悬浮时是否暂停自动播放（需开启自动播放） |
+| `showPagination` | `boolean`          | `true`  | 是否显示底部分页器（缩略图导航）             |
+| `showNavigation` | `boolean`          | `true`  | 是否显示左右导航按钮                         |
 
 ### Slots
 
@@ -176,146 +307,10 @@ const images = [
 
 ### 方法
 
-| 方法名               | 说明                 | 参数            |
-| -------------------- | -------------------- | --------------- |
-| `nextPage()`         | 切换到下一张图片     | -               |
-| `prevPage()`         | 切换到上一张图片     | -               |
-| `jumpByIndex(index)` | 跳转到指定索引的图片 | `index: number` |
-| `play()`             | 开始自动播放         | -               |
-| `stop()`             | 停止自动播放         | -               |
-
-## 示例
-
-### 完整配置示例
-
-```vue
-<template>
-  <div>
-    <h3>自动播放轮播图</h3>
-    <swiper-simple
-      :img-list="autoPlayImages"
-      :auto-play="true"
-      :play-time="2.5"
-      :infinite="true"
-      :keys-control="true"
-    />
-
-    <h3>手动控制轮播图</h3>
-    <swiper-simple
-      :img-list="manualImages"
-      :auto-play="false"
-      :keys-control="true"
-    >
-      <template #leftBtn>
-        <button class="custom-prev">上一张</button>
-      </template>
-      <template #rightBtn>
-        <button class="custom-next">下一张</button>
-      </template>
-    </swiper-simple>
-  </div>
-</template>
-
-<script setup>
-import { SwiperSimple } from "vue3-xm";
-
-const autoPlayImages = [
-  "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600",
-  "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=400&h=600",
-  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=600",
-];
-
-const manualImages = [
-  "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=400&h=600",
-  "https://images.unsplash.com/photo-1520637836862-4d197d17c0a9?w=400&h=600",
-  "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=400&h=600",
-];
-</script>
-
-<style>
-.custom-prev,
-.custom-next {
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.custom-prev:hover,
-.custom-next:hover {
-  background: rgba(0, 0, 0, 0.9);
-}
-</style>
-```
-
-## 键盘操作
-
-当 `keysControl` 为 `true` 时，支持以下键盘操作：
-
-- **← 左箭头键**: 切换到上一张图片
-- **→ 右箭头键**: 切换到下一张图片
-
-## 样式定制
-
-组件提供了以下 CSS 类名供自定义样式：
-
-```css
-/* 主容器 */
-.swiper-wrapper {
-  width: 400px;
-  height: 600px;
-}
-
-/* 图片容器 */
-.swiper-container {
-  transition: all ease 0.3s;
-}
-
-/* 单个图片项 */
-.swiper-item {
-  width: 400px;
-  height: 600px;
-}
-
-/* 缩略图导航 */
-.pagenation {
-  height: 100px;
-  box-shadow: 3px 3px 10px #ddd;
-}
-
-/* 缩略图 */
-.pagenation img {
-  filter: grayscale(1);
-  transition: all ease 0.3s;
-}
-
-.pagenation img.active {
-  filter: grayscale(0);
-}
-
-/* 导航按钮 */
-.btn-left,
-.btn-right {
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-}
-```
-
-## 注意事项
-
-1. **图片尺寸**: 组件默认尺寸为 400x600px，建议使用相同比例的图片
-2. **性能优化**: 当图片数量较多时，建议开启 `infinite` 模式以获得更好的用户体验
-3. **键盘控制**: 确保组件在页面中获得焦点才能响应键盘事件
-4. **自动播放**: 当用户手动操作后，自动播放会继续进行
-
-## 浏览器兼容性
-
-- Chrome >= 60
-- Firefox >= 60
-- Safari >= 12
-- Edge >= 79
+| 方法名               | 说明                 | 参数            | 返回值 |
+| -------------------- | -------------------- | --------------- | ------ |
+| `nextPage()`         | 切换到下一张图片     | -               | -      |
+| `prevPage()`         | 切换到上一张图片     | -               | -      |
+| `jumpByIndex(index)` | 跳转到指定索引的图片 | `index: number` | -      |
+| `play()`             | 开始自动播放         | -               | -      |
+| `stop()`             | 停止自动播放         | -               | -      |

@@ -6,6 +6,9 @@ export interface SwiperProps {
     playTime: number | string;
     keysControl: boolean;
     infinite: boolean;
+    hoverPause: boolean;
+    showPagination: boolean;
+    showNavigation: boolean;
 }
 
 export default {
@@ -31,5 +34,20 @@ export default {
     infinite: {
         type: Boolean,
         default: () => false,
+    },
+    // 鼠标悬浮时是否暂停自动播放
+    hoverPause: {
+        type: Boolean,
+        default: () => true,
+    },
+    // 是否显示分页器（底部缩略图）
+    showPagination: {
+        type: Boolean,
+        default: () => true,
+    },
+    // 是否显示导航按钮（左右箭头）
+    showNavigation: {
+        type: Boolean,
+        default: () => true,
     },
 };

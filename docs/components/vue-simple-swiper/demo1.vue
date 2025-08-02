@@ -4,7 +4,7 @@
         <p>这是一个基础的轮播图示例，展示默认配置和基本功能。</p>
 
         <div class="swiper-wrapper">
-            <SwiperSimple :img-list="basicImages" :auto-play="false" :keys-control="true" />
+            <SwiperSimple :img-list="basicImages" :auto-play="false" :keys-control="true" :infinite="false" />
         </div>
 
         <div class="info-panel">
@@ -25,11 +25,11 @@ import { SwiperSimple } from "vue3-xm";
 
 // 基础示例图片
 const basicImages = ref([
-    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=400&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=400&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1520637836862-4d197d17c0a9?w=400&h=600&fit=crop",
+    "https://picsum.photos/id/1/400/600",
+    "https://picsum.photos/id/10/400/600",
+    "https://picsum.photos/id/100/400/600",
+    "https://picsum.photos/id/1000/400/600",
+    "https://picsum.photos/id/1001/400/600",
 ]);
 </script>
 

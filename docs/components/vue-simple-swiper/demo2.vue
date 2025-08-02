@@ -31,10 +31,10 @@
                 ref="swiperRef"
             >
                 <template #leftBtn>
-                    <button class="custom-btn custom-btn-left">⬅️ 上一张</button>
+                    <button class="custom-btn custom-btn-left" @click="prevSlide">⬅️ 上一张</button>
                 </template>
                 <template #rightBtn>
-                    <button class="custom-btn custom-btn-right">下一张 ➡️</button>
+                    <button class="custom-btn custom-btn-right" @click="nextSlide">下一张 ➡️</button>
                 </template>
             </SwiperSimple>
         </div>
@@ -86,14 +86,14 @@ import { SwiperSimple } from "vue3-xm";
 
 // 高级示例图片 - 更多图片
 const advancedImages = ref([
-    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=400&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=400&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1520637836862-4d197d17c0a9?w=400&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=400&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=400&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=400&h=600&fit=crop",
+    "https://picsum.photos/seed/demo2-1/400/600",
+    "https://picsum.photos/seed/demo2-2/400/600",
+    "https://picsum.photos/seed/demo2-3/400/600",
+    "https://picsum.photos/seed/demo2-4/400/600",
+    "https://picsum.photos/seed/demo2-5/400/600",
+    "https://picsum.photos/seed/demo2-6/400/600",
+    "https://picsum.photos/seed/demo2-7/400/600",
+    "https://picsum.photos/seed/demo2-8/400/600",
 ]);
 
 // 控制状态
@@ -130,6 +130,20 @@ const onSpeedChange = () => {
         setTimeout(() => {
             swiperRef.value.play?.();
         }, 100);
+    }
+};
+
+// 手动切换到下一张
+const nextSlide = () => {
+    if (swiperRef.value) {
+        swiperRef.value.nextPage?.();
+    }
+};
+
+// 手动切换到上一张
+const prevSlide = () => {
+    if (swiperRef.value) {
+        swiperRef.value.prevPage?.();
     }
 };
 </script>

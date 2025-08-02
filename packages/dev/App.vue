@@ -1,7 +1,5 @@
 <template>
     <div class="dev-container">
-        <h1>XM Components Development</h1>
-
         <!-- 拖拽图表组件测试 -->
         <div class="demo-section">
             <h2>Drag Chart Component</h2>
@@ -26,10 +24,18 @@
 
         <!-- 轮播组件测试 -->
         <div class="demo-section">
-            <h2>Swiper Component</h2>
-            <div style="width: 100%; height: 200px; border: 1px solid #ddd; margin: 20px 0">
-                <SwiperSimple :img-list="swiperImages" :auto-play="true" :play-time="3" />
+            <h2>Swiper Component (无限轮播测试)</h2>
+            <div style="width: 100%; border: 1px solid #ddd; margin: 20px 0">
+                <SwiperSimple
+                    :img-list="swiperImages"
+                    :auto-play="true"
+                    :play-time="3"
+                    :infinite="true"
+                    :keys-control="true"
+                    :hoverPause="true"
+                />
             </div>
+            <p>此轮播组件启用了无限轮播模式，可以使用左右箭头键控制，也会自动播放。</p>
         </div>
     </div>
 </template>
