@@ -1079,6 +1079,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     };
     const getActiveTabStyle = () => {
       if (!activeTab.value && activeTab.value !== "0") return;
+      if (typeof document === "undefined") return;
       const currentItem = document.querySelector(`[data-ref="tab_${activeTab.value}"]`);
       if (!currentItem) return;
       return currentItem.getBoundingClientRect();
@@ -1118,7 +1119,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Tabs = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-3ab5e2ed"]]);
+const Tabs = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-b7b08941"]]);
 Tabs.install = (app) => {
   app.component(Tabs.name || "Tabs", Tabs);
 };

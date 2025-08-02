@@ -128,14 +128,17 @@ const selectTab = (item: TabItem) => {
 };
 
 const getActiveTabStyle = () => {
-    if (!activeTab.value && activeTab.value !== "0") return;
+  if (!activeTab.value && activeTab.value !== '0') return
+  
+  // 检查是否在浏览器环境中
+  if (typeof document === 'undefined') return
 
-    // 在Vue 3中，refs需要通过ref函数获取
-    const currentItem = document.querySelector(`[data-ref="tab_${activeTab.value}"]`) as HTMLElement;
-    if (!currentItem) return;
+  // 在Vue 3中，refs需要通过ref函数获取
+  const currentItem = document.querySelector(`[data-ref="tab_${activeTab.value}"]`) as HTMLElement
+  if (!currentItem) return
 
-    return currentItem.getBoundingClientRect();
-};
+  return currentItem.getBoundingClientRect()
+}
 
 onMounted(() => {
     if (props.modelValue) {
