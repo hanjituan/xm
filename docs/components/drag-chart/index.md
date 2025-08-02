@@ -31,36 +31,7 @@ import Demo2 from './demo2.vue'
 ::: details 查看代码
 
 ```vue
-<template>
-  <DragChart
-    :data="basicData"
-    :width="800"
-    :height="400"
-    @range-change="onRangeChange"
-  />
-</template>
-
-<script setup>
-import { ref, reactive } from "vue";
-import { DragChart } from "vue3-xm";
-
-const basicData = ref([
-  { time: "2024-01-01", value: 120 },
-  { time: "2024-01-02", value: 132 },
-  { time: "2024-01-03", value: 101 },
-  // ... 更多数据
-]);
-
-const selectedRange = reactive({
-  start: "",
-  end: "",
-});
-
-const onRangeChange = (range) => {
-  selectedRange.start = range.start;
-  selectedRange.end = range.end;
-};
-</script>
+<!--@include: ./demo1.vue-->
 ```
 
 :::
@@ -72,39 +43,7 @@ const onRangeChange = (range) => {
 ::: details 查看代码
 
 ```vue
-<template>
-  <div>
-    <div class="controls">
-      <button @click="changeTheme">切换主题</button>
-      <button @click="resetRange">重置范围</button>
-    </div>
-
-    <DragChart
-      :data="advancedData"
-      :width="900"
-      :height="450"
-      :theme="currentTheme"
-      :initial-start="initialRange.start"
-      :initial-end="initialRange.end"
-      @range-change="onRangeChange"
-    />
-  </div>
-</template>
-
-<script setup>
-import { ref, reactive } from "vue";
-import { DragChart } from "vue3-xm";
-
-const currentTheme = ref("light");
-const advancedData = ref([
-  { time: "2024-01-01", value: 120 },
-  // ... 更多数据
-]);
-
-const changeTheme = () => {
-  // 切换主题逻辑
-};
-</script>
+<!--@include: ./demo2.vue-->
 ```
 
 :::
