@@ -28,7 +28,28 @@ declare const _default: {
                 type: import('vue').PropType<boolean>;
                 required: true;
             };
-        }>> & Readonly<{}>, {}, {}, {}, {}, import('vue').ComponentOptionsMixin, import('vue').ComponentOptionsMixin, {}, import('vue').PublicProps, {}, true, {}, {}, import('vue').GlobalComponents, import('vue').GlobalDirectives, string, {}, any, import('vue').ComponentProvideOptions, {
+            hoverPause: {
+                type: import('vue').PropType<boolean>;
+                required: true;
+            };
+            showPagination: {
+                type: import('vue').PropType<boolean>;
+                required: true;
+            };
+            showNavigation: {
+                type: import('vue').PropType<boolean>;
+                required: true;
+            };
+        }>> & Readonly<{}>, {
+            nextPage: (isAutoPlay?: boolean) => void;
+            prevPage: () => void;
+            jumpByIndex: (index: number) => void;
+            play: () => void;
+            stop: () => void;
+            realIndex: Readonly<import('vue').Ref<number, number>>;
+            scrollIndex: Readonly<import('vue').Ref<number, number>>;
+            isPlaying: import('vue').ComputedRef<boolean>;
+        }, {}, {}, {}, import('vue').ComponentOptionsMixin, import('vue').ComponentOptionsMixin, {}, import('vue').PublicProps, {}, true, {}, {}, import('vue').GlobalComponents, import('vue').GlobalDirectives, string, {}, any, import('vue').ComponentProvideOptions, {
             P: {};
             B: {};
             D: {};
@@ -56,7 +77,28 @@ declare const _default: {
                 type: import('vue').PropType<boolean>;
                 required: true;
             };
-        }>> & Readonly<{}>, {}, {}, {}, {}, {}>;
+            hoverPause: {
+                type: import('vue').PropType<boolean>;
+                required: true;
+            };
+            showPagination: {
+                type: import('vue').PropType<boolean>;
+                required: true;
+            };
+            showNavigation: {
+                type: import('vue').PropType<boolean>;
+                required: true;
+            };
+        }>> & Readonly<{}>, {
+            nextPage: (isAutoPlay?: boolean) => void;
+            prevPage: () => void;
+            jumpByIndex: (index: number) => void;
+            play: () => void;
+            stop: () => void;
+            realIndex: Readonly<import('vue').Ref<number, number>>;
+            scrollIndex: Readonly<import('vue').Ref<number, number>>;
+            isPlaying: import('vue').ComputedRef<boolean>;
+        }, {}, {}, {}, {}>;
         __isFragment?: never;
         __isTeleport?: never;
         __isSuspense?: never;
@@ -81,7 +123,28 @@ declare const _default: {
             type: import('vue').PropType<boolean>;
             required: true;
         };
-    }>> & Readonly<{}>, {}, {}, {}, {}, import('vue').ComponentOptionsMixin, import('vue').ComponentOptionsMixin, {}, string, {}, {}, string, {}, import('vue').GlobalComponents, import('vue').GlobalDirectives, string, import('vue').ComponentProvideOptions> & import('vue').VNodeProps & import('vue').AllowedComponentProps & import('vue').ComponentCustomProps & (new () => {
+        hoverPause: {
+            type: import('vue').PropType<boolean>;
+            required: true;
+        };
+        showPagination: {
+            type: import('vue').PropType<boolean>;
+            required: true;
+        };
+        showNavigation: {
+            type: import('vue').PropType<boolean>;
+            required: true;
+        };
+    }>> & Readonly<{}>, {
+        nextPage: (isAutoPlay?: boolean) => void;
+        prevPage: () => void;
+        jumpByIndex: (index: number) => void;
+        play: () => void;
+        stop: () => void;
+        realIndex: Readonly<import('vue').Ref<number, number>>;
+        scrollIndex: Readonly<import('vue').Ref<number, number>>;
+        isPlaying: import('vue').ComputedRef<boolean>;
+    }, {}, {}, {}, import('vue').ComponentOptionsMixin, import('vue').ComponentOptionsMixin, {}, string, {}, {}, string, {}, import('vue').GlobalComponents, import('vue').GlobalDirectives, string, import('vue').ComponentProvideOptions> & import('vue').VNodeProps & import('vue').AllowedComponentProps & import('vue').ComponentCustomProps & (new () => {
         $slots: {
             leftBtn?(_: {}): any;
             rightBtn?(_: {}): any;

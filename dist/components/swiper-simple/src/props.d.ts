@@ -6,6 +6,9 @@ export interface SwiperProps {
     playTime: number | string;
     keysControl: boolean;
     infinite: boolean;
+    hoverPause: boolean;
+    showPagination: boolean;
+    showNavigation: boolean;
 }
 declare const _default: {
     imgList: {
@@ -26,6 +29,18 @@ declare const _default: {
         default: () => boolean;
     };
     infinite: {
+        type: BooleanConstructor;
+        default: () => boolean;
+    };
+    hoverPause: {
+        type: BooleanConstructor;
+        default: () => boolean;
+    };
+    showPagination: {
+        type: BooleanConstructor;
+        default: () => boolean;
+    };
+    showNavigation: {
         type: BooleanConstructor;
         default: () => boolean;
     };

@@ -1,4 +1,4 @@
-import { defineComponent, ref, computed, onMounted, onBeforeUnmount, watch, createElementBlock, openBlock, nextTick, createElementVNode, Fragment, renderList, normalizeClass, renderSlot } from "vue";
+import { defineComponent, ref, computed, onMounted, onBeforeUnmount, watch, createElementBlock, openBlock, nextTick, readonly, createElementVNode, createCommentVNode, Fragment, renderList, normalizeClass, renderSlot } from "vue";
 import dayjs from "dayjs";
 import * as echarts from "echarts";
 import { useResizeObserver } from "@vueuse/core";
@@ -644,10 +644,12 @@ const install$2 = (app) => {
   });
 };
 const DragChartInstaller = { install: install$2 };
-const _hoisted_1 = { class: "swiper-wrapper" };
-const _hoisted_2 = ["src"];
-const _hoisted_3 = ["src", "onClick"];
-const _hoisted_4 = { class: "btn" };
+const _hoisted_1 = ["src"];
+const _hoisted_2 = ["src", "onClick"];
+const _hoisted_3 = {
+  key: 1,
+  class: "btn"
+};
 const _sfc_main = /* @__PURE__ */ defineComponent({
   __name: "swiper-simple",
   props: {
@@ -655,16 +657,41 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     autoPlay: { type: Boolean },
     playTime: {},
     keysControl: { type: Boolean },
-    infinite: { type: Boolean }
+    infinite: { type: Boolean },
+    hoverPause: { type: Boolean },
+    showPagination: { type: Boolean },
+    showNavigation: { type: Boolean }
   },
-  setup(__props) {
+  setup(__props, { expose: __expose }) {
     const propsData = __props;
     const offset = ref(0);
     const swiperContainerRef = ref(null);
     const paginationRef = ref(null);
     const scrollIndex = ref(0);
+    const realIndex = ref(0);
     const timer = ref(null);
     const imgs = ref([]);
+    const displayImgs = ref([]);
+    const isHovered = ref(false);
+    const isPaused = ref(false);
+    const initDisplayImgs = () => {
+      if (propsData.infinite && imgs.value.length > 0) {
+        displayImgs.value = [
+          imgs.value[imgs.value.length - 1],
+          // 最后一张图片
+          ...imgs.value,
+          // 原始图片
+          imgs.value[0]
+          // 第一张图片
+        ];
+        scrollIndex.value = 1;
+        realIndex.value = 0;
+      } else {
+        displayImgs.value = [...imgs.value];
+        scrollIndex.value = 0;
+        realIndex.value = 0;
+      }
+    };
     const play = () => {
       timer.value = setInterval(() => {
         nextPage(true);
@@ -674,6 +701,20 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       if (timer.value) {
         clearInterval(timer.value);
         timer.value = null;
+      }
+    };
+    const onMouseEnter = () => {
+      if (propsData.hoverPause && propsData.autoPlay) {
+        isHovered.value = true;
+        isPaused.value = true;
+        stop();
+      }
+    };
+    const onMouseLeave = () => {
+      if (propsData.hoverPause && propsData.autoPlay && isPaused.value) {
+        isHovered.value = false;
+        isPaused.value = false;
+        play();
       }
     };
     const keydown = (e) => {
@@ -689,21 +730,38 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       }
     };
     const nextPage = (isAutoPlay = false) => {
-      scrollIndex.value++;
-      if (scrollIndex.value > imgs.value.length - 1) {
-        if (propsData.infinite) {
-          imgs.value = imgs.value.concat(imgs.value);
-          nextTick(() => {
-            nextFn(isAutoPlay);
-          });
-        } else {
-          scrollIndex.value = imgs.value.length - 1;
+      if (!propsData.infinite) {
+        if (realIndex.value >= imgs.value.length - 1) {
+          return;
         }
-        return;
+        realIndex.value++;
+        scrollIndex.value = realIndex.value;
+      } else {
+        scrollIndex.value++;
+        realIndex.value++;
+        if (realIndex.value >= imgs.value.length) {
+          realIndex.value = 0;
+        }
+        if (scrollIndex.value >= displayImgs.value.length - 1) {
+          offset.value = -400 * scrollIndex.value;
+          if (swiperContainerRef.value) {
+            swiperContainerRef.value.style.transform = `translateX(${offset.value}px)`;
+          }
+          setTimeout(() => {
+            scrollIndex.value = 1;
+            if (swiperContainerRef.value) {
+              swiperContainerRef.value.style.transition = "none";
+              swiperContainerRef.value.style.transform = `translateX(-400px)`;
+              swiperContainerRef.value.offsetHeight;
+              swiperContainerRef.value.style.transition = "all ease 0.3s";
+            }
+          }, 300);
+          if (!isAutoPlay) {
+            scrollIntoViews();
+          }
+          return;
+        }
       }
-      nextFn(isAutoPlay);
-    };
-    const nextFn = (isAutoPlay = false) => {
       offset.value = -400 * scrollIndex.value;
       if (swiperContainerRef.value) {
         swiperContainerRef.value.style.transform = `translateX(${offset.value}px)`;
@@ -713,10 +771,35 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       }
     };
     const prevPage = () => {
-      scrollIndex.value--;
-      if (scrollIndex.value < 0) {
-        scrollIndex.value = 0;
-        return;
+      if (!propsData.infinite) {
+        if (realIndex.value <= 0) {
+          return;
+        }
+        realIndex.value--;
+        scrollIndex.value = realIndex.value;
+      } else {
+        scrollIndex.value--;
+        realIndex.value--;
+        if (realIndex.value < 0) {
+          realIndex.value = imgs.value.length - 1;
+        }
+        if (scrollIndex.value <= 0) {
+          offset.value = -400 * scrollIndex.value;
+          if (swiperContainerRef.value) {
+            swiperContainerRef.value.style.transform = `translateX(${offset.value}px)`;
+          }
+          setTimeout(() => {
+            scrollIndex.value = displayImgs.value.length - 2;
+            if (swiperContainerRef.value) {
+              swiperContainerRef.value.style.transition = "none";
+              swiperContainerRef.value.style.transform = `translateX(${-400 * scrollIndex.value}px)`;
+              swiperContainerRef.value.offsetHeight;
+              swiperContainerRef.value.style.transition = "all ease 0.3s";
+            }
+          }, 300);
+          scrollIntoViews();
+          return;
+        }
       }
       offset.value = -400 * scrollIndex.value;
       if (swiperContainerRef.value) {
@@ -725,7 +808,12 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       scrollIntoViews();
     };
     const jumpByIndex = (index2) => {
-      scrollIndex.value = index2;
+      realIndex.value = index2;
+      if (propsData.infinite) {
+        scrollIndex.value = index2 + 1;
+      } else {
+        scrollIndex.value = index2;
+      }
       offset.value = -400 * scrollIndex.value;
       if (swiperContainerRef.value) {
         swiperContainerRef.value.style.transform = `translateX(${offset.value}px)`;
@@ -733,8 +821,8 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       scrollIntoViews();
     };
     const scrollIntoViews = () => {
-      if (!paginationRef.value) return;
-      const currentPageEl = paginationRef.value.children[scrollIndex.value];
+      if (!propsData.showPagination || !paginationRef.value) return;
+      const currentPageEl = paginationRef.value.children[realIndex.value];
       if (!currentPageEl) {
         return;
       }
@@ -759,6 +847,16 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     onMounted(() => {
       nextTick(() => {
         imgs.value = [...propsData.imgList];
+        initDisplayImgs();
+        if (propsData.infinite && imgs.value.length > 0) {
+          offset.value = -400 * scrollIndex.value;
+          if (swiperContainerRef.value) {
+            swiperContainerRef.value.style.transition = "none";
+            swiperContainerRef.value.style.transform = `translateX(${offset.value}px)`;
+            swiperContainerRef.value.offsetHeight;
+            swiperContainerRef.value.style.transition = "all ease 0.3s";
+          }
+        }
         if (propsData.keysControl) {
           window.addEventListener("keydown", keydown);
         }
@@ -777,10 +875,17 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       () => propsData.imgList,
       (newValue) => {
         imgs.value = [...newValue];
-        scrollIndex.value = 0;
-        offset.value = 0;
-        if (swiperContainerRef.value) {
-          swiperContainerRef.value.style.transform = `translateX(0px)`;
+        initDisplayImgs();
+        if (propsData.infinite && imgs.value.length > 0) {
+          offset.value = -400 * scrollIndex.value;
+          if (swiperContainerRef.value) {
+            swiperContainerRef.value.style.transform = `translateX(${offset.value}px)`;
+          }
+        } else {
+          offset.value = 0;
+          if (swiperContainerRef.value) {
+            swiperContainerRef.value.style.transform = `translateX(0px)`;
+          }
         }
       },
       { deep: true }
@@ -789,32 +894,50 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       () => propsData.autoPlay,
       (newValue) => {
         if (newValue) {
-          play();
+          if (!isHovered.value) {
+            play();
+          }
         } else {
           stop();
         }
       }
     );
+    __expose({
+      nextPage,
+      prevPage,
+      jumpByIndex,
+      play,
+      stop,
+      // 只读的状态
+      realIndex: readonly(realIndex),
+      scrollIndex: readonly(scrollIndex),
+      isPlaying: computed(() => timer.value !== null)
+    });
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1, [
+      return openBlock(), createElementBlock("div", {
+        class: "swiper-wrapper",
+        onMouseenter: onMouseEnter,
+        onMouseleave: onMouseLeave
+      }, [
         createElementVNode("div", {
           class: "swiper-container",
           ref_key: "swiperContainerRef",
           ref: swiperContainerRef
         }, [
-          (openBlock(true), createElementBlock(Fragment, null, renderList(imgs.value, (img, index2) => {
+          (openBlock(true), createElementBlock(Fragment, null, renderList(displayImgs.value, (img, index2) => {
             return openBlock(), createElementBlock("div", {
               class: "swiper-item",
-              key: index2
+              key: `${img}-${index2}`
             }, [
               createElementVNode("img", {
                 src: img,
                 alt: ""
-              }, null, 8, _hoisted_2)
+              }, null, 8, _hoisted_1)
             ]);
           }), 128))
         ], 512),
-        createElementVNode("div", {
+        propsData.showPagination ? (openBlock(), createElementBlock("div", {
+          key: 0,
           class: "pagenation",
           ref_key: "paginationRef",
           ref: paginationRef
@@ -826,14 +949,14 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
             }, [
               createElementVNode("img", {
                 src: img,
-                class: normalizeClass({ active: scrollIndex.value == index2 }),
+                class: normalizeClass({ active: realIndex.value == index2 }),
                 onClick: ($event) => jumpByIndex(index2),
                 alt: ""
-              }, null, 10, _hoisted_3)
+              }, null, 10, _hoisted_2)
             ]);
           }), 128))
-        ], 512),
-        createElementVNode("div", _hoisted_4, [
+        ], 512)) : createCommentVNode("", true),
+        propsData.showNavigation ? (openBlock(), createElementBlock("div", _hoisted_3, [
           renderSlot(_ctx.$slots, "leftBtn", {}, () => [
             createElementVNode("button", {
               class: "btn-left",
@@ -846,8 +969,8 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
               onClick: _cache[1] || (_cache[1] = () => nextPage())
             }, "→")
           ], true)
-        ])
-      ]);
+        ])) : createCommentVNode("", true)
+      ], 32);
     };
   }
 });
@@ -858,7 +981,7 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const SwiperSimple = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-c6e7dfc5"]]);
+const SwiperSimple = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-a6295b6c"]]);
 const components$1 = [SwiperSimple];
 const install$1 = (app) => {
   components$1.forEach((component) => {
