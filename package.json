@@ -43,6 +43,7 @@
   "devDependencies": {
     "@types/node": "^20.19.9",
     "@vitejs/plugin-vue": "^5.0.0",
+    "gh-pages": "^6.3.0",
     "rollup-plugin-visualizer": "^5.14.0",
     "terser": "^5.43.1",
     "typescript": "^5.0.0",
@@ -55,16 +56,14 @@
     "vue": "^3.3.0"
   },
   "scripts": {
-    "dev": "vite serve",
-    "dev:packages": "pnpm --filter packages dev",
-    "build": "vite build",
-    "build:types": "vue-tsc --declaration --emitDeclarationOnly --outDir dist",
-    "preview": "vite preview",
-    "prepublishOnly": "npm run build",
-    "release": "npm run build && npm publish",
+    "dev": "pnpm --filter packages dev",
     "docs:dev": "pnpm --filter docs dev",
     "docs:build": "pnpm --filter docs build",
-    "docs:preview": "pnpm --filter docs preview"
+    "docs:preview": "pnpm --filter docs preview",
+    "docs:deploy": "pnpm docs:build && gh-pages -d docs/.vitepress/dist",
+    "build": "vite build",
+    "preview": "vite preview",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@vueuse/core": "^13.6.0",
