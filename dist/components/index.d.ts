@@ -2,6 +2,7 @@ import { App } from 'vue';
 
 export * from './drag-chart';
 export * from './swiper-simple';
+export * from './tabs';
 declare const install: (app: App) => void;
 declare const _default: {
     install: (app: App) => void;

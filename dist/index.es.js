@@ -1,4 +1,4 @@
-import { defineComponent, ref, computed, onMounted, onBeforeUnmount, watch, createElementBlock, openBlock, nextTick, readonly, createElementVNode, createCommentVNode, Fragment, renderList, normalizeClass, renderSlot } from "vue";
+import { defineComponent, ref, computed, onMounted, onBeforeUnmount, watch, createElementBlock, openBlock, nextTick, readonly, createElementVNode, createCommentVNode, Fragment, renderList, normalizeClass, renderSlot, toDisplayString, normalizeStyle } from "vue";
 import dayjs from "dayjs";
 import * as echarts from "echarts";
 import { useResizeObserver } from "@vueuse/core";
@@ -75,7 +75,7 @@ const dragProps = {
     // 默认线条颜色
   }
 };
-const _sfc_main$1 = /* @__PURE__ */ defineComponent({
+const _sfc_main$2 = /* @__PURE__ */ defineComponent({
   __name: "drag-chart",
   props: {
     ...dragProps
@@ -637,20 +637,20 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const components$2 = [_sfc_main$1];
+const components$2 = [_sfc_main$2];
 const install$2 = (app) => {
   components$2.forEach((component) => {
     app.component(component.name || component.__name || "DragChart", component);
   });
 };
 const DragChartInstaller = { install: install$2 };
-const _hoisted_1 = ["src"];
-const _hoisted_2 = ["src", "onClick"];
-const _hoisted_3 = {
+const _hoisted_1$1 = ["src"];
+const _hoisted_2$1 = ["src", "onClick"];
+const _hoisted_3$1 = {
   key: 1,
   class: "btn"
 };
-const _sfc_main = /* @__PURE__ */ defineComponent({
+const _sfc_main$1 = /* @__PURE__ */ defineComponent({
   __name: "swiper-simple",
   props: {
     imgList: {},
@@ -932,7 +932,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
               createElementVNode("img", {
                 src: img,
                 alt: ""
-              }, null, 8, _hoisted_1)
+              }, null, 8, _hoisted_1$1)
             ]);
           }), 128))
         ], 512),
@@ -952,11 +952,11 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                 class: normalizeClass({ active: realIndex.value == index2 }),
                 onClick: ($event) => jumpByIndex(index2),
                 alt: ""
-              }, null, 10, _hoisted_2)
+              }, null, 10, _hoisted_2$1)
             ]);
           }), 128))
         ], 512)) : createCommentVNode("", true),
-        propsData.showNavigation ? (openBlock(), createElementBlock("div", _hoisted_3, [
+        propsData.showNavigation ? (openBlock(), createElementBlock("div", _hoisted_3$1, [
           renderSlot(_ctx.$slots, "leftBtn", {}, () => [
             createElementVNode("button", {
               class: "btn-left",
@@ -981,7 +981,7 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const SwiperSimple = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-a6295b6c"]]);
+const SwiperSimple = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-a6295b6c"]]);
 const components$1 = [SwiperSimple];
 const install$1 = (app) => {
   components$1.forEach((component) => {
@@ -992,7 +992,137 @@ const SwiperSimpleInstaller = {
   install: install$1,
   SwiperSimple
 };
-const components = [DragChartInstaller, SwiperSimpleInstaller];
+const _hoisted_1 = { class: "tabs-wraper flex flex-wrap p-1 rounded" };
+const _hoisted_2 = ["data-ref", "onClick"];
+const _hoisted_3 = ["src"];
+const _sfc_main = /* @__PURE__ */ defineComponent({
+  ...{
+    name: "Tabs"
+  },
+  __name: "tabs",
+  props: {
+    tabs: { default: () => [
+      {
+        value: "line",
+        label: "折线",
+        url: "https://imagecdn.ymm56.com/ymmfile/static/resource/aecd539e-515f-41e8-b126-7ac38102cafd.webp"
+      },
+      {
+        value: "table",
+        label: "表格视图",
+        url: "https://imagecdn.ymm56.com/ymmfile/static/resource/13428291-7a45-4430-8fa9-70f8d0dea937.webp"
+      },
+      {
+        value: "sl",
+        label: "罗罗诺亚·索隆"
+      },
+      {
+        value: "zfz",
+        label: "King·尊"
+      },
+      {
+        value: "lf",
+        label: "蒙奇·D·路飞"
+      },
+      {
+        value: "one",
+        label: "one"
+      },
+      {
+        value: "two",
+        label: "two"
+      },
+      {
+        value: "three",
+        label: "three"
+      },
+      {
+        value: "gogogo",
+        label: "gogogo"
+      }
+    ] },
+    modelValue: { default: "line" }
+  },
+  emits: ["update:modelValue", "change"],
+  setup(__props, { emit: __emit }) {
+    const props = __props;
+    const emit = __emit;
+    const activeTab = ref("");
+    const activeTabStyle = computed(() => {
+      const { width = 0, height = 0, top = 0, left = 0 } = getActiveTabStyle() || {};
+      return {
+        position: "fixed",
+        top: "0px",
+        left: "0px",
+        width: width + "px",
+        height: height + "px",
+        overflow: "hidden",
+        background: "#fff",
+        transition: "all ease 0.2s",
+        transform: `translate(${left}px, ${top}px)`,
+        zIndex: 1
+      };
+    });
+    watch(
+      () => props.modelValue,
+      (val) => {
+        if (val) {
+          activeTab.value = val;
+        }
+      },
+      { immediate: true }
+    );
+    const selectTab = (item) => {
+      activeTab.value = item.value;
+      emit("update:modelValue", item.value);
+      emit("change", item.value);
+    };
+    const getActiveTabStyle = () => {
+      if (!activeTab.value && activeTab.value !== "0") return;
+      const currentItem = document.querySelector(`[data-ref="tab_${activeTab.value}"]`);
+      if (!currentItem) return;
+      return currentItem.getBoundingClientRect();
+    };
+    onMounted(() => {
+      if (props.modelValue) {
+        activeTab.value = props.modelValue;
+      }
+    });
+    return (_ctx, _cache) => {
+      return openBlock(), createElementBlock("ul", _hoisted_1, [
+        (openBlock(true), createElementBlock(Fragment, null, renderList(_ctx.tabs, (item, index2) => {
+          return openBlock(), createElementBlock("li", {
+            "data-ref": `tab_${item.value}`,
+            key: `${item.value}${index2}`,
+            class: normalizeClass([{ active: item.value == activeTab.value }, "item-tab px-4 py-2 cursor-pointer flex items-center justify-center rounded"]),
+            onClick: ($event) => selectTab(item)
+          }, [
+            renderSlot(_ctx.$slots, "default", {
+              item,
+              index: index2
+            }, () => [
+              item.url ? (openBlock(), createElementBlock("img", {
+                key: 0,
+                class: "w-4 mr-1",
+                src: item.url,
+                alt: ""
+              }, null, 8, _hoisted_3)) : createCommentVNode("", true),
+              createElementVNode("span", null, toDisplayString(item.label), 1)
+            ], true)
+          ], 10, _hoisted_2);
+        }), 128)),
+        createElementVNode("li", {
+          style: normalizeStyle(activeTabStyle.value)
+        }, null, 4)
+      ]);
+    };
+  }
+});
+const Tabs = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-3ab5e2ed"]]);
+Tabs.install = (app) => {
+  app.component(Tabs.name || "Tabs", Tabs);
+};
+const components = [DragChartInstaller, SwiperSimpleInstaller, Tabs];
 const install = (app) => {
   components.forEach((component) => {
     app.use(component);
@@ -1003,8 +1133,9 @@ const index = {
   version: "0.1.0"
 };
 export {
-  _sfc_main$1 as DragChart,
+  _sfc_main$2 as DragChart,
   SwiperSimple,
+  Tabs,
   index as default,
   install
 };

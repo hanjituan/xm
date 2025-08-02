@@ -76,7 +76,7 @@ Lightweight swiper component.
 
 ## Documentation
 
-Visit our [documentation site](https://your-username.github.io/xm-components) for detailed guides and examples.
+Visit our [documentation site](https://hanjituan.github.io/xm/) for detailed guides and examples.
 
 ## License
 

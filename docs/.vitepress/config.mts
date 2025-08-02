@@ -46,6 +46,7 @@ export default defineConfig({
                             text: "Vue Simple Swiper",
                             link: "/components/vue-simple-swiper/",
                         },
+                        { text: "Tabs", link: "/components/tabs/" },
                     ],
                 },
             ],
@@ -54,7 +55,7 @@ export default defineConfig({
         socialLinks: [
             {
                 icon: "github",
-                link: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+                link: "https://github.com/hanjituan/xm",
             },
         ],
 
@@ -64,8 +65,7 @@ export default defineConfig({
         },
 
         editLink: {
-            pattern:
-                "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2072&q=80",
+            pattern: "https://github.com/hanjituan/xm/pulls",
         },
 
         lastUpdated: {
