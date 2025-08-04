@@ -16,40 +16,6 @@ npm install vue3-xm
 import { ClockFace } from "vue3-xm";
 ```
 
-### 基本使用
-
-```vue
-<template>
-  <ClockFace
-    :size="400"
-    center-text="12:00"
-    :sectors="sectors"
-    @sector-hover="handleSectorHover"
-  />
-</template>
-
-<script setup>
-import { ClockFace } from "vue3-xm";
-
-const sectors = [
-  {
-    from: { h: 9, m: 0, s: 0 },
-    to: { h: 12, m: 0, s: 0 },
-    color: "rgba(255, 99, 132, 0.3)",
-  },
-  {
-    from: { h: 12, m: 0, s: 0 },
-    to: { h: 15, m: 0, s: 0 },
-    color: "rgba(54, 162, 235, 0.3)",
-  },
-];
-
-const handleSectorHover = (data) => {
-  console.log("悬停的扇形:", data);
-};
-</script>
-```
-
 ## 使用示例
 
 <script setup>
