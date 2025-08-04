@@ -4,14 +4,16 @@ import type { App } from "vue";
 export * from "./drag-chart";
 export * from "./swiper-simple";
 export * from "./tabs";
+export * from "./clock-face";
 
 // 导入组件的安装器
 import DragChartInstaller from "./drag-chart";
 import SwiperSimpleInstaller from "./swiper-simple";
 import TabsInstaller from "./tabs";
+import ClockFaceInstaller from "./clock-face";
 
 // 所有组件列表
-const components = [DragChartInstaller, SwiperSimpleInstaller, TabsInstaller];
+const components = [DragChartInstaller, SwiperSimpleInstaller, TabsInstaller, ClockFaceInstaller];
 
 // 安装所有组件的函数
 const install = (app: App): void => {

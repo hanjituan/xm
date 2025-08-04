@@ -3,6 +3,7 @@ import { App } from 'vue';
 export * from './drag-chart';
 export * from './swiper-simple';
 export * from './tabs';
+export * from './clock-face';
 declare const install: (app: App) => void;
 declare const _default: {
     install: (app: App) => void;

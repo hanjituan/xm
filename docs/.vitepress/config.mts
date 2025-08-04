@@ -47,6 +47,7 @@ export default defineConfig({
                             link: "/components/vue-simple-swiper/",
                         },
                         { text: "Tabs", link: "/components/tabs/" },
+                        { text: "Clock Face", link: "/components/clock-face/" },
                     ],
                 },
             ],

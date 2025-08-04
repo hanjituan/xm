@@ -75,7 +75,7 @@ const dragProps = {
     // 默认线条颜色
   }
 };
-const _sfc_main$2 = /* @__PURE__ */ defineComponent({
+const _sfc_main$3 = /* @__PURE__ */ defineComponent({
   __name: "drag-chart",
   props: {
     ...dragProps
@@ -637,20 +637,20 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const components$2 = [_sfc_main$2];
-const install$2 = (app) => {
-  components$2.forEach((component) => {
+const components$3 = [_sfc_main$3];
+const install$3 = (app) => {
+  components$3.forEach((component) => {
     app.component(component.name || component.__name || "DragChart", component);
   });
 };
-const DragChartInstaller = { install: install$2 };
+const DragChartInstaller = { install: install$3 };
 const _hoisted_1$1 = ["src"];
 const _hoisted_2$1 = ["src", "onClick"];
 const _hoisted_3$1 = {
   key: 1,
   class: "btn"
 };
-const _sfc_main$1 = /* @__PURE__ */ defineComponent({
+const _sfc_main$2 = /* @__PURE__ */ defineComponent({
   __name: "swiper-simple",
   props: {
     imgList: {},
@@ -981,21 +981,21 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const SwiperSimple = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-a6295b6c"]]);
-const components$1 = [SwiperSimple];
-const install$1 = (app) => {
-  components$1.forEach((component) => {
+const SwiperSimple = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-a6295b6c"]]);
+const components$2 = [SwiperSimple];
+const install$2 = (app) => {
+  components$2.forEach((component) => {
     app.component(component.__name || "SwiperSimple", component);
   });
 };
 const SwiperSimpleInstaller = {
-  install: install$1,
+  install: install$2,
   SwiperSimple
 };
 const _hoisted_1 = { class: "tabs-wraper flex flex-wrap p-1 rounded" };
 const _hoisted_2 = ["data-ref", "onClick"];
 const _hoisted_3 = ["src"];
-const _sfc_main = /* @__PURE__ */ defineComponent({
+const _sfc_main$1 = /* @__PURE__ */ defineComponent({
   ...{
     name: "Tabs"
   },
@@ -1119,11 +1119,291 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Tabs = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-b7b08941"]]);
+const Tabs = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-cb472e49"]]);
 Tabs.install = (app) => {
   app.component(Tabs.name || "Tabs", Tabs);
 };
-const components = [DragChartInstaller, SwiperSimpleInstaller, Tabs];
+const clockProps = {
+  size: { type: Number, default: 300 },
+  centerText: { type: String, default: "" },
+  centerTextStyle: {
+    type: Object,
+    default: () => ({
+      fontSize: 16,
+      fontFamily: "Arial, sans-serif",
+      color: "#333",
+      fontWeight: "normal",
+      textAlign: "center",
+      textBaseline: "middle"
+    })
+  },
+  sectors: {
+    type: Array,
+    default: () => [
+      // 默认1-2点扇形
+      {
+        from: { h: 1, m: 0, s: 0 },
+        to: { h: 2, m: 0, s: 0 },
+        color: "rgba(0,180,255,0.3)",
+        // 扇形位置(分成100份, 0最外圈, 100最中心)
+        startPos: 70,
+        // 内圈位置，距离边框百分比
+        endPos: 10
+        // 外圈位置，距离边框百分比
+      }
+    ]
+  },
+  // 扇形位置(分成100份, 0最外圈, 100最中心)
+  startPos: 70,
+  // 内圈位置，距离边框百分比
+  endPos: 10,
+  // 外圈位置，距离边框百分比
+  // 边框属性
+  borderColor: { type: String, default: "#333" },
+  borderWidth: { type: Number, default: 4 },
+  // 背景属性
+  backgroundColor: { type: String, default: "transparent" },
+  // 小刻度属性
+  minorTickColor: { type: String, default: "#666" },
+  minorTickWidth: { type: Number, default: 2 },
+  minorTickLen: { type: Number, default: 10 },
+  minorTickDistance: { type: Number, default: 0 },
+  // 距离边框的距离
+  // 大刻度属性
+  majorTickColor: { type: String, default: "#333" },
+  majorTickWidth: { type: Number, default: 4 },
+  majorTickLen: { type: Number, default: 20 },
+  majorTickDistance: { type: Number, default: 0 }
+  // 距离边框的距离
+};
+const _sfc_main = {
+  __name: "clock-face",
+  props: clockProps,
+  emits: ["sector-hover"],
+  setup(__props, { emit: __emit }) {
+    const props = __props;
+    const emit = __emit;
+    const canvas = ref(null);
+    const container = ref(null);
+    const canvasSize = ref(props.size);
+    let resizeObserver = null;
+    const sectorGeometries = ref([]);
+    function timeToAngle({ h, m, s }) {
+      let deg = h % 12 * 30 + m * 0.5 + s * (0.5 / 60);
+      return (deg - 90) * Math.PI / 180;
+    }
+    function normalizeAngle(angle) {
+      angle = angle % (2 * Math.PI);
+      return angle < 0 ? angle + 2 * Math.PI : angle;
+    }
+    function isPointInSector(x, y, sector, cx, cy) {
+      const dx = x - cx;
+      const dy = y - cy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < sector.inner || dist > sector.outer) return false;
+      let angle = Math.atan2(dy, dx);
+      angle = normalizeAngle(angle);
+      let start = normalizeAngle(sector.startAngle);
+      let end = normalizeAngle(sector.endAngle);
+      if (end < start) end += 2 * Math.PI;
+      if (angle < start) angle += 2 * Math.PI;
+      return angle >= start && angle <= end;
+    }
+    function draw() {
+      const ctx = canvas.value.getContext("2d");
+      const dpr = window.devicePixelRatio || 1;
+      const displaySize = canvasSize.value;
+      const actualSize = displaySize * dpr;
+      canvas.value.width = actualSize;
+      canvas.value.height = actualSize;
+      canvas.value.style.width = displaySize + "px";
+      canvas.value.style.height = displaySize + "px";
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, displaySize, displaySize);
+      const cx = displaySize / 2;
+      const cy = displaySize / 2;
+      const r_outer = cx - 10;
+      if (props.backgroundColor && props.backgroundColor !== "transparent") {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, r_outer, 0, 2 * Math.PI);
+        ctx.fillStyle = props.backgroundColor;
+        ctx.fill();
+        ctx.restore();
+      }
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, r_outer, 0, 2 * Math.PI);
+      ctx.lineWidth = props.borderWidth;
+      ctx.strokeStyle = props.borderColor;
+      ctx.stroke();
+      ctx.restore();
+      const major_num = 12;
+      const minor_num = 60;
+      for (let i = 0; i < major_num; i++) {
+        let angle = i / major_num * 2 * Math.PI;
+        let sin = Math.sin(angle), cos = Math.cos(angle);
+        let startR = r_outer - props.majorTickDistance - props.majorTickLen;
+        let endR = r_outer - props.majorTickDistance;
+        let x1 = cx + startR * sin;
+        let y1 = cy - startR * cos;
+        let x2 = cx + endR * sin;
+        let y2 = cy - endR * cos;
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.lineWidth = props.majorTickWidth;
+        ctx.strokeStyle = props.majorTickColor;
+        ctx.stroke();
+        ctx.restore();
+      }
+      for (let i = 0; i < minor_num; i++) {
+        if (i % 5 === 0) continue;
+        let angle = i / minor_num * 2 * Math.PI;
+        let sin = Math.sin(angle), cos = Math.cos(angle);
+        let startR = r_outer - props.minorTickDistance - props.minorTickLen;
+        let endR = r_outer - props.minorTickDistance;
+        let x1 = cx + startR * sin;
+        let y1 = cy - startR * cos;
+        let x2 = cx + endR * sin;
+        let y2 = cy - endR * cos;
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.lineWidth = props.minorTickWidth;
+        ctx.strokeStyle = props.minorTickColor;
+        ctx.stroke();
+        ctx.restore();
+      }
+      sectorGeometries.value = [];
+      props.sectors.forEach((sector, idx) => {
+        let startAngle = timeToAngle(sector.from);
+        let endAngle = timeToAngle(sector.to);
+        let startPercent = sector.startPos !== void 0 ? sector.startPos : props.startPos !== void 0 ? props.startPos : 30;
+        let endPercent = sector.endPos !== void 0 ? sector.endPos : props.endPos !== void 0 ? props.endPos : 90;
+        let ringInner = r_outer * (startPercent / 100);
+        let ringOuter = r_outer * (endPercent / 100);
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, ringOuter, startAngle, endAngle, false);
+        ctx.arc(cx, cy, ringInner, endAngle, startAngle, true);
+        ctx.closePath();
+        ctx.fillStyle = sector.color || "rgba(0,180,255,0.3)";
+        ctx.fill();
+        ctx.restore();
+        sectorGeometries.value.push({
+          startAngle,
+          endAngle,
+          inner: ringInner,
+          outer: ringOuter,
+          idx,
+          data: sector
+        });
+      });
+      if (props.centerText) {
+        const style = props.centerTextStyle;
+        ctx.save();
+        ctx.font = `${style.fontWeight} ${style.fontSize}px ${style.fontFamily}`;
+        ctx.fillStyle = style.color;
+        ctx.textAlign = style.textAlign;
+        ctx.textBaseline = style.textBaseline;
+        ctx.fillText(props.centerText, cx, cy);
+        ctx.restore();
+      }
+    }
+    function handleMouseMove(e) {
+      const rect = canvas.value.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cx = canvasSize.value / 2;
+      const cy = canvasSize.value / 2;
+      let found = false;
+      for (const sector of sectorGeometries.value) {
+        if (isPointInSector(x, y, sector, cx, cy)) {
+          emit("sector-hover", { index: sector.idx, sector: sector.data });
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        emit("sector-hover", null);
+      }
+    }
+    function handleMouseLeave() {
+      emit("sector-hover", null);
+    }
+    function handleResize(entries) {
+      for (const entry of entries) {
+        const rect = entry.contentRect;
+        const minSize = Math.min(rect.width, rect.height);
+        canvasSize.value = Math.max(100, Math.min(1e3, Math.floor(minSize)));
+        nextTick(draw);
+      }
+    }
+    onMounted(() => {
+      draw();
+      if (container.value) {
+        resizeObserver = new window.ResizeObserver(handleResize);
+        resizeObserver.observe(container.value);
+      }
+    });
+    watch(
+      () => [
+        props.size,
+        props.centerText,
+        props.centerTextStyle,
+        props.sectors,
+        props.borderColor,
+        props.borderWidth,
+        props.backgroundColor,
+        props.minorTickColor,
+        props.minorTickWidth,
+        props.minorTickLen,
+        props.minorTickDistance,
+        props.majorTickColor,
+        props.majorTickWidth,
+        props.majorTickLen,
+        props.majorTickDistance,
+        props.startPos,
+        props.endPos
+      ],
+      draw,
+      { deep: true }
+    );
+    onBeforeUnmount(() => {
+      if (resizeObserver && container.value) {
+        resizeObserver.unobserve(container.value);
+        resizeObserver.disconnect();
+      }
+    });
+    return (_ctx, _cache) => {
+      return openBlock(), createElementBlock("div", {
+        class: "clock-face",
+        ref_key: "container",
+        ref: container,
+        style: normalizeStyle({ width: `${canvasSize.value}px`, height: `${canvasSize.value}px` })
+      }, [
+        createElementVNode("canvas", {
+          ref_key: "canvas",
+          ref: canvas,
+          onMousemove: handleMouseMove,
+          onMouseleave: handleMouseLeave
+        }, null, 544)
+      ], 4);
+    };
+  }
+};
+const ClockFace = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-c5650d0e"]]);
+const components$1 = [ClockFace];
+const install$1 = (app) => {
+  components$1.forEach((component) => {
+    app.component(component.name || component.__name || "ClockFace", component);
+  });
+};
+const ClockFaceInstaller = { install: install$1 };
+const components = [DragChartInstaller, SwiperSimpleInstaller, Tabs, ClockFaceInstaller];
 const install = (app) => {
   components.forEach((component) => {
     app.use(component);
@@ -1134,7 +1414,8 @@ const index = {
   version: "0.1.0"
 };
 export {
-  _sfc_main$2 as DragChart,
+  ClockFace,
+  _sfc_main$3 as DragChart,
   SwiperSimple,
   Tabs,
   index as default,
