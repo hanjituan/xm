@@ -43,7 +43,6 @@
   "devDependencies": {
     "@types/node": "^20.19.9",
     "@vitejs/plugin-vue": "^5.0.0",
-    "gh-pages": "^6.3.0",
     "rollup-plugin-visualizer": "^5.14.0",
     "terser": "^5.43.1",
     "typescript": "^5.0.0",
@@ -60,7 +59,7 @@
     "docs:dev": "pnpm --filter docs dev",
     "docs:build": "pnpm --filter docs build",
     "docs:preview": "pnpm --filter docs preview",
-    "docs:deploy": "pnpm docs:build && gh-pages -d docs/.vitepress/dist",
+    "docs:deploy": "pnpm docs:build",
     "build": "vite build",
     "preview": "vite preview",
     "prepublishOnly": "npm run build"
