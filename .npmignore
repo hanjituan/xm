@@ -1,0 +1,17 @@
+# Source files
+packages/
+docs/
+*.ts
+*.vue
+vite.config.ts
+tsconfig.json
+
+# Development files
+.editorconfig
+.DS_Store
+node_modules/
+pnpm-lock.yaml
+
+# Build tools
+.vitepress/
+rollup.config.js
