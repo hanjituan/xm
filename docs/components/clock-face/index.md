@@ -4,9 +4,58 @@ Clock Face 是一个基于 Canvas 的时钟表盘组件，支持自定义扇形�
 
 ## 基础用法
 
+### 安装
+
+```bash
+npm install vue3-xm
+```
+
+### 导入
+
+```js
+import { ClockFace } from "vue3-xm";
+```
+
+### 基本使用
+
+```vue
+<template>
+  <ClockFace
+    :size="400"
+    center-text="12:00"
+    :sectors="sectors"
+    @sector-hover="handleSectorHover"
+  />
+</template>
+
+<script setup>
+import { ClockFace } from "vue3-xm";
+
+const sectors = [
+  {
+    from: { h: 9, m: 0, s: 0 },
+    to: { h: 12, m: 0, s: 0 },
+    color: "rgba(255, 99, 132, 0.3)",
+  },
+  {
+    from: { h: 12, m: 0, s: 0 },
+    to: { h: 15, m: 0, s: 0 },
+    color: "rgba(54, 162, 235, 0.3)",
+  },
+];
+
+const handleSectorHover = (data) => {
+  console.log("悬停的扇形:", data);
+};
+</script>
+```
+
+## 使用示例
+
 <script setup>
 import Demo1 from './demo1.vue'
 import Demo2 from './demo2.vue'
+import Demo3 from './demo3.vue'
 </script>
 
 ### 基础时钟
@@ -23,6 +72,14 @@ import Demo2 from './demo2.vue'
 
 ::: details 查看代码
 <<< @/components/clock-face/demo2.vue
+:::
+
+### 日历任务安排
+
+<Demo3 />
+
+::: details 查看代码
+<<< @/components/clock-face/demo3.vue
 :::
 
 ## API
@@ -87,51 +144,3 @@ import Demo2 from './demo2.vue'
 | 事件名       | 说明                     | 回调参数                                      |
 | ------------ | ------------------------ | --------------------------------------------- |
 | sector-hover | 鼠标悬停在扇形区域时触发 | `{ index: number, sector: object }` 或 `null` |
-
-## 使用示例
-
-### 安装
-
-```bash
-npm install vue3-xm
-```
-
-### 导入
-
-```js
-import { ClockFace } from "vue3-xm";
-```
-
-### 基本使用
-
-```vue
-<template>
-  <ClockFace
-    :size="400"
-    center-text="12:00"
-    :sectors="sectors"
-    @sector-hover="handleSectorHover"
-  />
-</template>
-
-<script setup>
-import { ClockFace } from "vue3-xm";
-
-const sectors = [
-  {
-    from: { h: 9, m: 0, s: 0 },
-    to: { h: 12, m: 0, s: 0 },
-    color: "rgba(255, 99, 132, 0.3)",
-  },
-  {
-    from: { h: 12, m: 0, s: 0 },
-    to: { h: 15, m: 0, s: 0 },
-    color: "rgba(54, 162, 235, 0.3)",
-  },
-];
-
-const handleSectorHover = (data) => {
-  console.log("悬停的扇形:", data);
-};
-</script>
-```
