@@ -81,3 +81,5 @@ Visit our [documentation site](https://hanjituan.github.io/xm/) for detailed gui
 ## License
 
 MIT License
+
+分享: https://dokumen.pub/thiaoouba-prophecy.html
