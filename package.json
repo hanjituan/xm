@@ -1,6 +1,6 @@
 {
   "name": "vue3-xm",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Modern Vue 3 Component Library",
   "type": "module",
   "main": "./dist/index.umd.js",
@@ -31,11 +31,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/xm-components.git"
+    "url": "https://github.com/hanjituan/xm.git"
   },
   "homepage": "https://hanjituan.github.io/xm/",
   "bugs": {
-    "url": "https://github.com/your-username/xm-components/issues"
+    "url": "https://github.com/hanjituan/xm/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -60,10 +60,12 @@
     "docs:dev": "pnpm --filter docs dev",
     "docs:build": "pnpm --filter docs build",
     "docs:preview": "pnpm --filter docs preview",
-    "docs:deploy": "pnpm docs:build",
+    "docs:deploy": "pnpm docs:build && gh-pages -d docs/dist",
     "build": "vite build",
     "preview": "vite preview",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "pnpm run build",
+    "publish:npm": "pnpm publish",
+    "deploy:pages": "pnpm run docs:deploy"
   },
   "dependencies": {
     "@vueuse/core": "^13.6.0",

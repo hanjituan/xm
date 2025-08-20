@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch, nextTick } from "vue";
 
 defineOptions({
     name: "Tabs",
@@ -91,14 +91,20 @@ const emit = defineEmits<{
     change: [value: string];
 }>();
 
-const activeTab = ref<string>("");
+const activeTab = ref<string>(props.modelValue || "");
+
+// 添加一个响应式标志来强制重新计算样式
+const forceUpdate = ref(0);
 
 const activeTabStyle = computed(() => {
-    // FIXME: 待优化 - 容器宽/高/位置发生变化时更新activeTabStyle
+    // 通过 forceUpdate 来触发重新计算
+    forceUpdate.value;
+
+    // 容器宽/高/位置发生变化时更新activeTabStyle
     const { width = 0, height = 0, top = 0, left = 0 } = getActiveTabStyle() || {};
 
     return {
-        position: "fixed" as const,
+        position: "absolute" as const,
         top: "0px",
         left: "0px",
         width: width + "px",
@@ -125,6 +131,10 @@ const selectTab = (item: TabItem) => {
     activeTab.value = item.value;
     emit("update:modelValue", item.value);
     emit("change", item.value);
+    // 强制更新样式
+    nextTick(() => {
+        forceUpdate.value++;
+    });
 };
 
 const getActiveTabStyle = () => {
@@ -133,17 +143,34 @@ const getActiveTabStyle = () => {
     // 检查是否在浏览器环境中
     if (typeof document === "undefined") return;
 
-    // 在Vue 3中，refs需要通过ref函数获取
+    // 获取当前激活的 tab 元素
     const currentItem = document.querySelector(`[data-ref="tab_${activeTab.value}"]`) as HTMLElement;
     if (!currentItem) return;
 
-    return currentItem.getBoundingClientRect();
+    // 获取 tabs 容器元素
+    const tabsContainer = currentItem.closest(".tabs-wraper") as HTMLElement;
+    if (!tabsContainer) return;
+
+    // 获取当前 tab 相对于容器的位置
+    const itemRect = currentItem.getBoundingClientRect();
+    const containerRect = tabsContainer.getBoundingClientRect();
+
+    return {
+        width: itemRect.width,
+        height: itemRect.height,
+        top: itemRect.top - containerRect.top,
+        left: itemRect.left - containerRect.left,
+    };
 };
 
 onMounted(() => {
     if (props.modelValue) {
         activeTab.value = props.modelValue;
     }
+    // 在下一个 tick 强制更新样式计算
+    nextTick(() => {
+        forceUpdate.value++;
+    });
 });
 </script>
 
@@ -157,6 +184,7 @@ ul {
 .tabs-wraper {
     background: #f5f5f5;
     position: relative;
+    border: 1px solid red;
 }
 
 .item-tab {
