@@ -60,7 +60,7 @@
     "docs:dev": "pnpm --filter docs dev",
     "docs:build": "pnpm --filter docs build",
     "docs:preview": "pnpm --filter docs preview",
-    "docs:deploy": "pnpm docs:build && gh-pages -d docs/dist",
+    "docs:deploy": "pnpm docs:build && gh-pages -d docs/.vitepress/dist",
     "build": "vite build",
     "preview": "vite preview",
     "prepublishOnly": "pnpm run build",
