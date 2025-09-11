@@ -1,4 +1,5 @@
 import { defineConfig } from "vitepress";
+import { resolve } from "path";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -48,6 +49,7 @@ export default defineConfig({
                         },
                         { text: "Tabs", link: "/components/tabs/" },
                         { text: "Clock Face", link: "/components/clock-face/" },
+                        { text: "ECharts", link: "/components/echarts/" },
                     ],
                 },
             ],

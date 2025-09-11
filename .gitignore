@@ -1,9 +1,14 @@
 node_modules
 cache
 dist
+dist-dev
 
 # VitePress 文档构建产物
 docs/.vitepress/cache/
 docs/.vitepress/dist/
 .temp/
 .cache/
+
+# 包管理器锁定文件状态
+**/.modules.yaml
+**/.pnpm/

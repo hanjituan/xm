@@ -35,6 +35,7 @@ import DragChart from "../components/drag-chart/src/drag-chart.vue";
 import SwiperSimple from "../components/swiper-simple/src/swiper-simple.vue";
 import ClockFace from "../components/clock-face/src/clock-face.vue";
 import Tabs from "../components/tabs/src/tabs.vue";
+import EChartsComp from "../components/echarts/src/echarts.vue";
 
 // 组件映射
 const componentMap = {
@@ -42,6 +43,7 @@ const componentMap = {
     "swiper-simple": SwiperSimple,
     "clock-face": ClockFace,
     tabs: Tabs,
+    echarts: EChartsComp,
 };
 
 // 组件列表配置
@@ -69,6 +71,12 @@ const componentList = ref([
         title: "Tabs",
         icon: "📋",
         description: "标签页组件",
+    },
+    {
+        name: "echarts",
+        title: "ECharts",
+        icon: "📊",
+        description: "基于 ECharts 的图表组件",
     },
 ]);
 

@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       vue3-xm:
-        specifier: ^0.1.6
-        version: 0.1.6(vue@3.5.18)
+        specifier: ^0.1.7
+        version: 0.1.7(vue@3.5.18)
     devDependencies:
       vitepress:
         specifier: ^1.6.3
@@ -789,8 +789,8 @@ packages:
       postcss:
         optional: true
 
-  vue3-xm@0.1.6:
-    resolution: {integrity: sha512-5hUfANrckzWJRmbiQqZP3eWa/YotUWLaKhhOwtfaCy2pBx/gZ9OL+K9aDIGZOfas+FBUYMxm9qluUS52xGeDoA==}
+  vue3-xm@0.1.7:
+    resolution: {integrity: sha512-yXhI9mSZHAOkdd665rcDHvRkjifZ/ODCrPrffP5rCt95H8nMrbKQH296v50Dw5m0JjrdfqbTLG8X4bJm6ubkmA==}
     peerDependencies:
       vue: ^3.3.0
 
@@ -1610,7 +1610,7 @@ snapshots:
       - typescript
       - universal-cookie
 
-  vue3-xm@0.1.6(vue@3.5.18):
+  vue3-xm@0.1.7(vue@3.5.18):
     dependencies:
       '@vueuse/core': 13.6.0(vue@3.5.18)
       dayjs: 1.11.13
