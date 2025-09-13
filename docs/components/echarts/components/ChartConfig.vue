@@ -2,6 +2,43 @@
     <div class="config-section">
         <h4>配置选项</h4>
 
+        <!-- 预设配置选择const props = defineProps({
+    chartType: String,
+    chartTitle: String,
+    selectedTheme: String,
+    chartData: Array,
+    currentConfigId: String,
+    availableConfigs: Array,
+});
+
+const emit = defineEmits([
+    "update:chartType",
+    "update:chartTitle",
+    "update:selectedTheme",
+    "updateChartType",
+    "updateTitle",
+    "updateData",
+    "addDataItem",
+    "removeDataItem",
+    "loadPreset",
+    "updateDataItem",
+    "selectConfig"
+]);lass="config-group">
+            <label>预设配置：</label>
+            <div class="preset-config-grid">
+                <div 
+                    v-for="config in availableConfigs" 
+                    :key="config.id"
+                    :class="['config-card', { active: currentConfigId === config.id }]"
+                    @click="selectConfig(config.id)"
+                >
+                    <div class="config-type-badge">{{ config.type }}</div>
+                    <div class="config-name">{{ config.name }}</div>
+                    <div class="config-desc">{{ config.description }}</div>
+                </div>
+            </div>
+        </div>
+
         <!-- 图表类型选择 -->
         <div class="config-group">
             <label>图表类型：</label>
@@ -122,6 +159,10 @@ const removeDataItem = (index) => {
 
 const loadPreset = (type) => {
     emit("loadPreset", type);
+};
+
+const selectConfig = (configId) => {
+    emit("selectConfig", configId);
 };
 </script>
 
@@ -249,6 +290,66 @@ const loadPreset = (type) => {
 .btn-preset:hover {
     background: #0366d6;
     color: white;
+}
+
+/* 预设配置网格 */
+.preset-config-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #e1e4e8;
+    border-radius: 4px;
+    padding: 8px;
+    background: white;
+}
+
+.config-card {
+    padding: 12px;
+    border: 2px solid #e1e4e8;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+    position: relative;
+}
+
+.config-card:hover {
+    border-color: #0366d6;
+    box-shadow: 0 2px 4px rgba(3, 102, 214, 0.1);
+}
+
+.config-card.active {
+    border-color: #0366d6;
+    background: #f1f8ff;
+    box-shadow: 0 0 0 2px rgba(3, 102, 214, 0.1);
+}
+
+.config-type-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #0366d6;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.config-name {
+    font-weight: 600;
+    color: #24292e;
+    margin-bottom: 4px;
+    font-size: 13px;
+}
+
+.config-desc {
+    font-size: 11px;
+    color: #586069;
+    line-height: 1.3;
 }
 
 @media (max-width: 768px) {
